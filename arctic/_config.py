@@ -51,16 +51,8 @@ FW_POINTERS_REFS_KEY = 'SEGMENT_SHAS'
 FW_POINTERS_CONFIG_KEY = 'FW_POINTERS_CONFIG'
 
 # This variable has effect only in Hybrid mode, and controls whether forward and legacy pointers are cross-verified
-ARCTIC_FORWARD_POINTERS_RECONCILE = bool(os.environ.get('ARCTIC_FORWARD_POINTERS_RECONCILE'))
-try:
-    # Controls the mode of operation for FW pointers, has effect on any new versions created
-    ARCTIC_FORWARD_POINTERS_CFG = FwPointersCfg[(os.environ.get('ARCTIC_FORWARD_POINTERS_CFG',
-                                                                FwPointersCfg.DISABLED.name).upper())]
-except Exception:
-    logger.exception("Failed to configure forward pointers with configuration {}".format(
-        os.environ.get('ARCTIC_FORWARD_POINTERS_CFG')))
-    ARCTIC_FORWARD_POINTERS_CFG = FwPointersCfg.DISABLED
-
+ARCTIC_FORWARD_POINTERS_RECONCILE = False
+ARCTIC_FORWARD_POINTERS_CFG = FwPointersCfg.DISABLED
 
 # ---------------------------
 # Compression configuration
@@ -103,3 +95,10 @@ FORCE_BYTES_TO_UNICODE = bool(os.environ.get('FORCE_BYTES_TO_UNICODE'))
 # Flag used for indicating caching levels. For now just for list_libraries.
 # -------------------------------
 ENABLE_CACHE = not bool(os.environ.get('ARCTIC_DISABLE_CACHE'))
+
+# -------------------------------
+# Currently we try to bson encode if the data is less than a given size and store it in
+# the version collection, but pickling might be preferable if we have characters that don't
+# play well with the bson encoder or if you always want your data in the data collection.
+# -------------------------------
+SKIP_BSON_ENCODE_PICKLE_STORE = bool(os.environ.get('SKIP_BSON_ENCODE_PICKLE_STORE'))
