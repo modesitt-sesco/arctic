@@ -98,7 +98,7 @@ class PandasStore(NdarrayStore):
             dts = recarr[idx]
             mask = Series(np.zeros(len(dts)), index=dts)
             start, end = _start_end(date_range, dts)
-            mask[(start <= mask.index) & (mask.index <= end)] = 1.0
+            mask[(mask.index >= start) & (mask.index <= end)] = 1.0
             return recarr[mask.values.astype(bool)]
         return recarr
 
